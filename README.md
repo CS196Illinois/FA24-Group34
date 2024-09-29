@@ -1,4 +1,4 @@
-# Group TEAM_NUMBER
+# Group 34
 Group Name: 34
 
 [MVP Link](https://docs.google.com/document/d/1ugCgHzQNuHtPKnT1pHh7XGvgtbfTGABv/edit?usp=sharing&ouid=114432494593630147893&rtpof=true&sd=true)
