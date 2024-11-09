@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class wordset_gen {
 
-    private static final String API_KEY = "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"; // Replace with your actual API key
+    private static final String API_KEY = "[API_KEY]"; // API Key obscrued for security reasons
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
     public static  int MAX_ATTEMPTS = 5;
 
