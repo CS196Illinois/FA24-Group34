@@ -1,4 +1,3 @@
-package dev.group34;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;

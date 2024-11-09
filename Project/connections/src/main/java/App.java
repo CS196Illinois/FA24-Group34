@@ -1,5 +1,3 @@
-package dev.group34;
-
 /**
  * Hello world!
  *
