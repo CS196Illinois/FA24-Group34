@@ -10,7 +10,7 @@ public class wordset_gen {
 
     private static final String API_KEY = "[API_KEY]"; // API Key obscrued for security reasons
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
-    public static  int MAX_ATTEMPTS = 5;
+    public static int MAX_ATTEMPTS = 5;
 
     public static void main(String[] args) {
         try {
