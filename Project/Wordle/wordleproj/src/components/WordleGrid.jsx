@@ -1,69 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import './WordleGrid.css';
 
-const WordleGrid = ({ currentRow }) => {
-  // Using a 2D array to represent the grid
-  const [grid, setGrid] = useState([
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-  ]);
-
-  const [colorGrid, setColorGrid] = useState([
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-    ['', '', '', '', ''],
-  ]);
-
-  const answer = "HELLO"; // Example answer
+const WordleGrid = ({ currentRow, answer }) => {
   
+  console.log(answer);
+  // var to track the grid, colorGrid, and the number of rows
+  const [grid, setGrid] = useState([
+    ['', '', '', '', ''], 
+    ['', '', '', '', '']
+  ]); // Start with 2 rows
+  const [colorGrid, setColorGrid] = useState([
+    ['', '', '', '', ''], 
+    ['', '', '', '', '']
+  ]); // Start with 2 rows
+  const [rows, setRows] = useState(2); // Initial number of rows is 2
+
+  // Handle typing in the grid cells
   const handleChange = (event, rowIndex, colIndex) => {
     if (rowIndex === currentRow) { // Only allow input for the current row
-
-      const newGrid = [...grid]; //copy grid
-
-      newGrid[rowIndex][colIndex] = event.target.value.toUpperCase().slice(0, 1); // Limit input to one letter
+      const newGrid = [...grid]; // Copy grid
+      newGrid[rowIndex][colIndex] = event.target.value.toUpperCase().slice(0, 1); // Limit input to 1 letter for each box
       setGrid(newGrid);
 
-      // Automatically move to the next input box
+      // Move to the next input box
       if (event.target.value && colIndex < 4) {
         const nextInput = document.querySelector(
-
           `input[data-row="${rowIndex}"][data-col="${colIndex + 1}"]`
-
         );
-
         if (nextInput) nextInput.focus();
       }
     }
   };
 
+  // Check if the guess matches the answer and update colors
   const checkAnswer = (rowNum) => {
-    const guess = grid[rowNum].join(''); //to create the guess String
-    // const answer = answerArray.join('');
-
+    const guess = grid[rowNum].join(''); // Combine the row letters into a string
     const newColorGrid = [...colorGrid];
+    let rowChanged = false;
 
     if (guess === answer) {
-      newColorGrid[rowNum] = ['green', 'green', 'green', 'green', 'green'];
+      newColorGrid[rowNum] = ['green', 'green', 'green', 'green', 'green']; // All correct
     } else {
       grid[rowNum].forEach((letter, colIndex) => {
         if (letter === answer[colIndex]) {
           newColorGrid[rowNum][colIndex] = 'green'; // Correct letter and position
+
+          rowChanged = true;
         } else if (answer.includes(letter)) {
-          newColorGrid[rowNum][colIndex] = 'yellow'; // Correct letter but wrong position, I want to fix it so that a letter is put in all its current spots, it shows as grey instead of yellow
+          newColorGrid[rowNum][colIndex] = 'yellow'; // Correct letter but wrong position
+
+          rowChanged = true;
         } else {
           newColorGrid[rowNum][colIndex] = 'gray'; // Incorrect letter
         }
       });
     }
+
     setColorGrid(newColorGrid);
+
+    // If a green or yellow is found, add a new row if there are less than 5 rows
+    if (rowChanged && rows < 5) {
+      setRows(rows + 1); // Increase rows
+      // Add a new empty rows to both
+      setGrid((prevGrid) => [...prevGrid, ['', '', '', '', '']]);
+      setColorGrid((prevColorGrid) => [...prevColorGrid, ['', '', '', '', '']]);
+    }
   };
 
   useEffect(() => {
@@ -72,6 +73,7 @@ const WordleGrid = ({ currentRow }) => {
     }
   }, [currentRow]);
 
+  // Handle backspace for moving focus to the previous input box
   const handleKeyDown = (event, rowIndex, colIndex) => {
     if (event.key === 'Backspace' && !grid[rowIndex][colIndex] && colIndex > 0) {
       const prevInput = document.querySelector(
@@ -83,7 +85,7 @@ const WordleGrid = ({ currentRow }) => {
 
   return (
     <div className="grid-container">
-      {grid.map((row, rowIndex) => (
+      {grid.slice(0, rows).map((row, rowIndex) => ( // Only show rows up to our 'rows' count
         <div key={rowIndex} className="grid-row">
           {row.map((cell, colIndex) => (
             <input
@@ -100,7 +102,7 @@ const WordleGrid = ({ currentRow }) => {
                 color: 'black',
                 backgroundColor: colorGrid[rowIndex][colIndex] || 'white',
               }}
-              disabled={rowIndex !== currentRow} // Disable input for all rows except the current one, I had to look this one up
+              disabled={rowIndex !== currentRow} // Disable input for all rows except the current one
             />
           ))}
         </div>
